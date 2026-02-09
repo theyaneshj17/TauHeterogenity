@@ -1,5 +1,11 @@
-# TauHeterogenity
 
+## Background and Attribution
+
+This codebase has been **adapted and modified for Tau-PET data**.
+
+The original methodology has been extended and customized to support Tau-PET–based analysis, training, and evaluation. Full attribution and citation details are provided at the end of this document.
+
+---
 
 ## Prerequisites
 
@@ -65,6 +71,57 @@ python main_scripts.py \
 * `--outer_folds`: Number of outer cross-validation folds
 * `--inner_folds`: Number of inner cross-validation folds
 * `--max_workers`: Number of parallel worker processes
+
+---
+
+## Model Evaluation / Testing
+
+After training completes, select the **best-performing fold** based on:
+
+* AIC
+* BIC
+* Validation classification loss
+
+Once the best fold is identified, use the corresponding trained model and GMM parameters to run inference on the dataset.
+
+### Run Model in Test Mode
+
+```bash
+python main.py \
+  --mode test \
+  --model /N/slate/thjaya/Final1/ADNIResultsFinal292026/Results_train_outer_fold=0_type=0_k=3_lr=0.05_reassign=1.0/model.pth.tar \
+  --gmmmodel /N/slate/thjaya/Final1/ADNIResultsFinal292026/Results_train_outer_fold=0_type=0_k=3_lr=0.05_reassign=1.0/gm_params.mat \
+  --data /N/slate/thjaya/Final/pet.csv \
+  --output_dir /N/slate/thjaya/Final1/ADNIResultsFinal292026 \
+  --batch 32 \
+  --workers 1
+```
+
+### Explanation
+
+* The model and GMM parameters are loaded from the **best training fold**.
+* The full dataset is passed again for evaluation/inference.
+* This step produces final predictions and evaluation outputs using the selected optimal model.
+
+---
+
+## Citation
+
+If you use or adapt this code, please cite the original work:
+
+```bibtex
+@article{KANG2024120737,
+  title   = {Disentangling brain atrophy heterogeneity in Alzheimer's disease: A deep self-supervised approach with interpretable latent space},
+  journal = {NeuroImage},
+  volume  = {297},
+  pages   = {120737},
+  year    = {2024},
+  issn    = {1053-8119},
+  doi     = {https://doi.org/10.1016/j.neuroimage.2024.120737},
+  url     = {https://www.sciencedirect.com/science/article/pii/S1053811924002301},
+  author  = {Sohyun Kang and Sung-Woo Kim and Joon-Kyung Seong}
+}
+```
 
 ---
 
