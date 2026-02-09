@@ -1,11 +1,4 @@
-
-## Background and Attribution
-
-This codebase has been **adapted and modified for Tau-PET data**.
-
-The original methodology has been extended and customized to support Tau-PET–based analysis, training, and evaluation. Full attribution and citation details are provided at the end of this document.
-
----
+# Tau Heterogenity
 
 ## Prerequisites
 
@@ -107,7 +100,11 @@ python main.py \
 
 ## Citation
 
-If you use or adapt this code, please cite the original work:
+This codebase has been adapted and modified for Tau-PET data.
+
+The original methodology has been extended and customized to support Tau-PET–based analysis, training, and evaluation. If you use or adapt this code, please cite the original work:
+
+---
 
 ```bibtex
 @article{KANG2024120737,
