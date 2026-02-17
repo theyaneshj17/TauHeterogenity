@@ -21,13 +21,10 @@ The framework includes:
 
 ## Methodological Overview
 
-```{=html}
 <p align="center">
-```
-`<img src="docs/Arch_5.png" alt="Analysis Pipeline" width="800"/>`{=html}
-```{=html}
+  <img src="docs/Arch_5.png" alt="Analysis Pipeline" width="800">
 </p>
-```
+
 **Figure 1.** Multi-stage framework for tau PET subtype discovery and validation:\
 (A) Self-supervised deep learning framework for tau pattern identification. PET-tau input data are encoded into 10-dimensional latent representations and clustered using Gaussian Mixture Model.,\
 (B) Multidimensional subtype characterization pipeline. Identified subtypes undergo comprehensive validation through clinical, genetic, cognitive, and functional connectivity profiling.
