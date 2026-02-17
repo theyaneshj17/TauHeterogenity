@@ -48,9 +48,9 @@ Run the following command to start model training:
 
 ```bash
 python main_scripts.py \
-  --data_path /N/slate/thjaya/Final/pet.csv \
-  --script_path /N/slate/thjaya/Final/TheyaneshProjectFinal_LastADNI_1/src/main.py \
-  --output_dir /N/slate/thjaya/Final1/ADNIResultsFinal292026 \
+  --data_path pet.csv \
+  --script_path main.py \
+  --output_dir Results \
   --outer_folds 10 \
   --inner_folds 2 \
   --max_workers 4
@@ -82,10 +82,10 @@ Once the best fold is identified, use the corresponding trained model and GMM pa
 ```bash
 python main.py \
   --mode test \
-  --model /N/slate/thjaya/Final1/ADNIResultsFinal292026/Results_train_outer_fold=0_type=0_k=3_lr=0.05_reassign=1.0/model.pth.tar \
-  --gmmmodel /N/slate/thjaya/Final1/ADNIResultsFinal292026/Results_train_outer_fold=0_type=0_k=3_lr=0.05_reassign=1.0/gm_params.mat \
-  --data /N/slate/thjaya/Final/pet.csv \
-  --output_dir /N/slate/thjaya/Final1/ADNIResultsFinal292026 \
+  --model model.pth.tar \
+  --gmmmodel gm_params.mat \
+  --data pet.csv \
+  --output_dir Results \
   --batch 32 \
   --workers 1
 ```
