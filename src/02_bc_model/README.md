@@ -1,7 +1,7 @@
-# Bayesian Connectivity Modeling of fMRI Subtypes
+# Brain Connectivity Modeling of fMRI Subtypes
 
 This repository contains the analysis pipeline for subtype-specific
-Bayesian Connectivity (BC) modeling of functional connectivity data.
+Brain Connectivity (BC) modeling of functional connectivity data.
 
 The workflow consists of three main stages:
 
@@ -136,11 +136,10 @@ summary tables - Connectivity heatmaps - Cluster difference maps
 
 ---
 
----
 
 # Acknowledgment and Citation
 
-The Bayesian Connectivity (BC) model implementation used in this repository is adapted from the framework proposed in:
+The Brain Connectivity (BC) model implementation used in this repository is adapted from the framework proposed in:
 
 Wang, S., Wang, Y., Xu, F. H., Shen, L., & Zhao, Y. (2025).  
 *Establishing group-level brain structural connectivity incorporating anatomical knowledge under latent space modeling.*  

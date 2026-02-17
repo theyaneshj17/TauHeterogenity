@@ -1,4 +1,4 @@
-# Tau Heterogenity
+# Subtype discovery
 
 ## Prerequisites
 
