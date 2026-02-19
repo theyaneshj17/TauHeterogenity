@@ -66,4 +66,10 @@ Data access requires approved data use agreements.
 -   R ≥ 4.0
 -   Required packages: coda, MASS, pROC, corrplot, ggplot2
 
+### License
+This repository is licensed under the MIT License.
+
+Note: ADNI and A4 study datasets are not distributed with this repository.
+Users must obtain data access approval from the respective data providers.
+
 
