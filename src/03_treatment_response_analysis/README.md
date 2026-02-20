@@ -67,6 +67,8 @@ outputs/
 │   ├── PACC_gls_df3_PredictionInterval.png
 │   ├── PACC_gls_bootstrap_CI.png
 │   └── PACC_gls_bootstrap_CI_publication.pdf
+│   ├── supplementary_histogram_visits.pdf
+│   └── supplementary_histogram_visits.png
 └── boot_summary.rds
 ```
 
@@ -120,6 +122,7 @@ Figures are saved to `outputs/figures/`. The bootstrap step (n = 5,000) takes ap
 | `PACC_gls_df4_CI.png` | df = 4 with delta-method 95% CI (for comparison) |
 | `PACC_gls_df3_PredictionInterval.png` | df = 3 with 95% prediction interval (includes residual variance; covers individual observations) |
 | `PACC_gls_bootstrap_CI_publication.pdf` | Publication-ready Figure 6: bootstrap CI, W1 and W2 side by side |
+| `supplementary_histogram_visits.pdf/.png` | Supplementary histogram of PACC assessment counts per participant (median 13, range 2–18) |
 
 ---
 
