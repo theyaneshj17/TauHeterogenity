@@ -623,3 +623,77 @@ ggsave("../../outputs/figures/PACC_gls_bootstrap_CI_publication.png",
        p_combined, width = 10, height = 5, dpi = 300)
 
 cat("\nAll figures saved to outputs/figures/\n")
+
+################################################################################
+# 12. SAMPLE DESCRIPTION: Assessment counts per participant
+#     Summarizes the distribution of longitudinal observations to report
+#     in the paper: median assessments per participant, range, and percentage
+#     with 10 or more assessments.
+#     Produces supplementary histogram (Supplementary Figure SX).
+################################################################################
+
+# Count visits per participant
+visit_counts <- df_gls %>%
+  group_by(person_id) %>%
+  summarise(n_visits = n())
+
+cat("Assessment count summary:\n")
+cat("  Participants:", nrow(visit_counts), "\n")
+print(summary(visit_counts$n_visits))
+cat("\nVisit count distribution:\n")
+print(table(visit_counts$n_visits))
+
+cat("  Scheduled time points:", length(unique(df_gls$T_time)), "\n")
+cat("  Time points:", paste(sort(unique(df_gls$T_time)), collapse = ", "), "\n")
+
+pct_10_plus <- round(mean(visit_counts$n_visits >= 10) * 100, 1)
+cat("  % with 10+ assessments:", pct_10_plus, "%\n")
+
+# Supplementary histogram
+df_hist <- visit_counts[rep(seq_len(nrow(visit_counts)), 1), ]
+
+p_hist <- ggplot(visit_counts, aes(x = n_visits)) +
+  geom_histogram(
+    binwidth  = 1,
+    fill      = "#2C5F8A",
+    color     = "white",
+    linewidth = 0.3
+  ) +
+  geom_vline(
+    xintercept = 13,
+    linetype   = "dashed",
+    color      = "#C0392B",
+    linewidth  = 0.7
+  ) +
+  annotate(
+    "text",
+    x = 13.4, y = 57,
+    label    = "Median = 13",
+    color    = "#C0392B",
+    size     = 3.5,
+    hjust    = 0,
+    fontface = "italic"
+  ) +
+  scale_x_continuous(breaks = 2:18, expand = c(0.01, 0)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 62)) +
+  labs(
+    x       = "Number of PACC Assessments per Participant",
+    y       = "Number of Participants",
+    caption = "Dashed line indicates median (13 assessments). N = 362 participants."
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    axis.line          = element_line(color = "black", linewidth = 0.5),
+    axis.ticks         = element_line(color = "black"),
+    axis.text          = element_text(color = "black"),
+    axis.title         = element_text(color = "black", face = "bold"),
+    plot.caption       = element_text(size = 9, color = "gray40", hjust = 0),
+    panel.grid.major.y = element_line(color = "gray90", linewidth = 0.4),
+    panel.grid.major.x = element_blank(),
+    plot.margin        = margin(10, 15, 10, 10)
+  )
+
+ggsave("../../outputs/figures/supplementary_histogram_visits.pdf", p_hist, width = 6, height = 4)
+ggsave("../../outputs/figures/supplementary_histogram_visits.png", p_hist, width = 6, height = 4, dpi = 300)
+
+cat("Supplementary histogram saved.\n")
