@@ -283,14 +283,14 @@ add_labels <- function(df) {
     Treatment     = factor(ifelse(grepl("Placebo", Group), "Placebo", "Solanezumab"),
                            levels = c("Placebo", "Solanezumab")),
     T_months      = T_weeks / 4.33,
-    Subtype_label = ifelse(Subtype == "S1", "S1 (Typical)", "S2 (Cortical)")
+    Subtype_label = ifelse(Subtype == "S1", "W1", "W2")
   )
 }
 
 # Add T_months to observed data
 df_gls <- df_gls %>%
   mutate(T_months = T_weeks / 4.33,
-         Subtype_label = ifelse(Subtype == "S1", "S1 (Typical)", "S2 (Cortical)"))
+         Subtype_label = ifelse(Subtype == "S1", "W1", "W2"))
 
 ################################################################################
 # 6. EXPLORATORY PLOT: df=3, simple model (no CI)
@@ -540,10 +540,10 @@ saveRDS(boot_summary, "../../outputs/boot_summary.rds")
 # 11. PUBLICATION-READY FIGURE: Bootstrap CI, W1 vs W2 side by side
 #
 #     This is Figure 6 in the paper. Two panels show PACC trajectories for
-#     W1 (S1, typical) and W2 (S2, cortical) subtypes separately, with
-#     bootstrap 95% CI ribbons. The diverging trajectories in W2 between
-#     Placebo and Solanezumab illustrate the primary finding: solanezumab
-#     slows cognitive decline selectively in W2 (β=0.950, p=.039).
+#     W1 and W2 subtypes separately, with bootstrap 95% CI ribbons.
+#     The diverging trajectories in W2 between Placebo and Solanezumab
+#     illustrate the primary finding: solanezumab slows cognitive decline
+#     selectively in W2 (β=0.950, p=.039), while W1 shows no treatment effect.
 ################################################################################
 
 # Publication theme
