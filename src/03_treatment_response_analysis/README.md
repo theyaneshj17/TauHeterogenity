@@ -1,16 +1,17 @@
-## Treatment Response Analysis
 # Treatment Response Analysis
 
-Longitudinal analysis of PACC (Preclinical Alzheimer's Cognitive Composite) trajectories in response to Solanezumab treatment, stratified by AD subtype (W1 / W2).
+Longitudinal analysis of PACC (Preclinical Alzheimer's Cognitive Composite) trajectories in response to Solanezumab treatment, stratified by AD tau-PET subtype (W1 / W2).
 
 ---
 
 ## Overview
 
-This module fits a **Generalized Least Squares (GLS)** model with **natural cubic splines** and **CAR(1) within-subject correlation** to assess differential treatment effects across Alzheimer's disease subtypes. The approach follows the methodology described in Carolyn et al.
+This module fits a **Generalized Additive Mixed Model (GAMM)** with **natural cubic splines**, **participant-level random intercepts**, and **CAR(1) within-subject correlation** to assess differential treatment effects across Alzheimer's disease subtypes. The approach follows the methodology described in Carolyn et al.
+
+**Primary hypothesis:** The therapeutic effect of Solanezumab on cognitive decline rates (slopes over time) is contingent upon baseline tau-PET subtype — i.e., whether W1 and W2 subtypes respond differently to treatment.
 
 **Key questions:**
-- Do W1 and W2 subtypes show different rates of cognitive decline?
+- Do W1 and W2 subtypes show different rates of cognitive decline over time?
 - Does Solanezumab differentially benefit one subtype over the other?
 
 ---
@@ -19,14 +20,28 @@ This module fits a **Generalized Least Squares (GLS)** model with **natural cubi
 
 ```
 PACC ~ ns(T_weeks, df=3) × Group + age + sex + education + race + APOE-ε4 + amyloid + baseline_PACC
+       + random intercept (person_id)
 ```
+
+Where `Group = interaction(Subtype, Treatment)`, encoding all constituent two-way interactions (time-by-treatment, time-by-subtype, treatment-by-subtype) and the primary three-way interaction (time × treatment × subtype).
 
 | Component | Choice | Rationale |
 |-----------|--------|-----------|
-| Time function | Natural cubic splines, df = 3 | Flexible nonlinear trajectory; df selected by AIC |
-| Group | Subtype × Treatment interaction | Tests differential drug response by subtype |
+| Time function | Natural cubic splines, df = 3 | Captures non-linear trajectories; df selected via two-stage validation (AIC + 10-fold CV) |
+| Fixed effects | Hierarchically specified; all two-way interactions + three-way time × treatment × subtype | Tests whether solanezumab's effect on decline rate differs between W1 and W2 |
+| Random effects | Participant-level random intercepts | Accounts for repeated measures nested within subjects |
 | Correlation | CAR(1) | Continuous-time AR(1) for unequally spaced visits |
 | Covariates | Age, sex, education, race, APOE-ε4, baseline amyloid (SUVRCER), baseline PACC | Standard AD trial adjustment set |
+
+---
+
+## Spline Degree Selection: Two-Stage Validation
+
+df = 3 was selected through a two-stage process:
+
+**Stage 1 — AIC comparison:** Models with df = 2, 3, 4 were fit using the same GLS framework. AIC favored df = 3.
+
+**Stage 2 — 10-fold cross-validation:** Models with df = 1 through df = 4 were compared using out-of-sample R². Patients were held out as whole clusters (not individual observations) to prevent data leakage from within-subject correlation. Predictive performance plateaued at df = 3; higher df showed diminishing returns. df = 3 also ensures analytical consistency with the primary A4 trial analysis (Carolyn et al.), which used the same configuration.
 
 ---
 
@@ -74,7 +89,7 @@ Required files and expected columns:
 ## Requirements
 
 ```r
-install.packages(c("dplyr", "tidyr", "nlme", "splines",
+install.packages(c("dplyr", "tidyr", "nlme", "splines", "mgcv",
                    "ggplot2", "ggthemes", "patchwork", "cowplot", "boot"))
 ```
 
@@ -92,7 +107,7 @@ R version ≥ 4.1.0 recommended.
 source("src/03_treatment_response_analysis/gls_treatment_response.R")
 ```
 
-Figures are saved to `outputs/figures/`. The bootstrap step (n = 5000) takes approximately 30–60 minutes depending on your machine.
+Figures are saved to `outputs/figures/`. The bootstrap step (n = 5,000) takes approximately 30–60 minutes depending on your machine.
 
 ---
 
@@ -101,15 +116,16 @@ Figures are saved to `outputs/figures/`. The bootstrap step (n = 5000) takes app
 | Figure | Description |
 |--------|-------------|
 | `PACC_gls_natural_spline.png` | Model trajectories, no uncertainty band |
-| `PACC_gls_df3_CI.png` | df=3 with delta-method 95% CI |
-| `PACC_gls_df4_CI.png` | df=4 with delta-method 95% CI |
-| `PACC_gls_df3_PredictionInterval.png` | df=3 with 95% prediction interval (includes residual variance) |
-| `PACC_gls_bootstrap_CI_publication.pdf` | Publication-ready figure, bootstrap CI, split by subtype |
+| `PACC_gls_df3_CI.png` | df = 3 with delta-method 95% CI |
+| `PACC_gls_df4_CI.png` | df = 4 with delta-method 95% CI (for comparison) |
+| `PACC_gls_df3_PredictionInterval.png` | df = 3 with 95% prediction interval (includes residual variance; covers individual observations) |
+| `PACC_gls_bootstrap_CI_publication.pdf` | Publication-ready Figure 6: bootstrap CI, W1 and W2 side by side |
 
 ---
 
 ## Notes
 
-- Bootstrap uses **cluster resampling** (resample whole patients) to preserve within-subject correlation.
-- Failed bootstrap iterations (non-convergence) are silently skipped; convergence rate is reported in console output.
-- Subtype labels: **W1** = S1 (Typical pattern), **W2** = S2 (Cortical pattern).
+- Bootstrap uses **cluster resampling** (whole patients resampled with replacement) to preserve the within-subject CAR(1) correlation structure. Resampling individual observations would underestimate uncertainty.
+- Failed bootstrap iterations (non-convergence) are silently skipped; convergence rate per group is reported in console output. Results are saved to `outputs/boot_summary.rds` to avoid re-running.
+- **Note on naming:** The internal variable `Subtype` uses values `S1`/`S2` (from the clustering output). These correspond to `W1`/`W2` as reported in the paper.
+- Predictions are computed at covariate means (marginal effect): age, education, amyloid, and baseline PACC at sample means; sex = female; race = modal category; APOE4 = non-carrier.
