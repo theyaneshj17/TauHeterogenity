@@ -1,5 +1,3 @@
-
-
 import argparse
 import time
 import random
