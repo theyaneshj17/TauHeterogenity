@@ -51,7 +51,7 @@ class ImprovedMLP(nn.Module):
                 nn.Linear(input_dim, v),
                 nn.BatchNorm1d(v),
                 nn.ReLU(inplace=True),
-                nn.Dropout(0.8)
+                nn.Dropout(0.4)
             ])
             input_dim = v
             
