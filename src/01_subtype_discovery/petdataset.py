@@ -29,5 +29,5 @@ class PetDataset(Dataset):
         return len(self.x_data)
 
 # Example usage
-file_path =  '/N/slate/thjaya/Final/pet.csv'
+file_path =  'ADNIDataPVC.csv'
 pet_dataset = PetDataset(file_path)
